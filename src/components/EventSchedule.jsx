@@ -13,6 +13,9 @@ import pkMain from '../../pk_main.png'
 import pkBg from '../../pk_bg.png'
 import ltFlower from '../../lt_flower.png'
 import rtFlower from '../../rt_flower.png'
+import rcBg from '../../rc_bg.png'
+import rcInner from '../../rc_inner.png'
+import rcItop from '../../rc_itop.png'
 import petal1 from '../../petal1.png'
 import petal2 from '../../petal2.png'
 import petal3 from '../../petal3.png'
@@ -532,6 +535,23 @@ export default function EventSchedule() {
   const qrOpacity5          = useTransform(smooth5, [0.20, 0.30], [0, 1])
   const qrScale5            = useTransform(smooth5, [0.20, 0.30], [0.88, 1])
 
+  // — Section 6 scroll hooks (Reception) —
+  const sixthSectionRef = useRef(null)
+  const { scrollYProgress: scrollYProgress6 } = useScroll({ target: sixthSectionRef, offset: ['start end', 'end start'] })
+  const smooth6             = useSpring(scrollYProgress6, { stiffness: 60, damping: 20, restDelta: 0.001 })
+  const darkOverlayOpacity6 = useTransform(smooth6, [0, 0.1, 0.3], [1, 0.9, 0])
+  const titleOpacity6       = useTransform(smooth6, [0.05, 0.15], [0, 1])
+  const titleScale6         = useTransform(smooth6, [0.05, 0.15], [0.82, 1])
+  const subtitleOpacity6    = useTransform(smooth6, [0.08, 0.18], [0, 1])
+  const subtitleY6          = useTransform(smooth6, [0.08, 0.18], [20, 0])
+  const subtitleFilter6     = useTransform(smooth6, [0.08, 0.18], ['blur(8px)', 'blur(0px)'])
+  const venueOpacity6       = useTransform(smooth6, [0.12, 0.22], [0, 1])
+  const venueX6             = useTransform(smooth6, [0.12, 0.22], [-28, 0])
+  const dateOpacity6        = useTransform(smooth6, [0.15, 0.25], [0, 1])
+  const dateX6              = useTransform(smooth6, [0.15, 0.25], [28, 0])
+  const qrOpacity6          = useTransform(smooth6, [0.20, 0.30], [0, 1])
+  const qrScale6            = useTransform(smooth6, [0.20, 0.30], [0.88, 1])
+
   // — Section 5 (Wedding) config —
   const fifthSectionContent = {
     wrapper:  { left: '14%', top: '17%', right: '16%', bottom: '10%' },
@@ -543,6 +563,18 @@ export default function EventSchedule() {
     cardBody:  { left: '0%', width: '100%', textAlign: 'center', fontSize: '3.7cqw', color: '#ffffff', fontClassName: 'font-sans' },
     qr: { maxWidth: '28%', labelFontSize: '2.35cqw', textAlign: 'center', labelColor: '#5f4a56', labelBg: 'rgba(255,255,255,1)', fontClassName: 'font-sans' },
   }
+  const sixthSectionContent = {
+    wrapper:  { left: '14%', top: '17%', right: '16%', bottom: '10%' },
+    title:    { top: '-10%', left: '-1%', width: '100%', textAlign: 'center', fontSize: '14cqw', color: '#fff4dc', fontClassName: 'font-script-title' },
+    subtitle: { marginTop: '50%', left: '1%', width: '100%', textAlign: 'center', fontSize: '4.3cqw', color: '#fff4dc', fontClassName: 'font-elegant-subtitle' },
+    venue:    { marginTop: '10%', left: '0%', width: '100%', textAlign: 'center', fontSize: '4cqw', color: '#fff4dc', labelColor: '#fff4dc', fontClassName: 'font-sans' },
+    cards:    { marginTop: '2%', gap: '2%', width: '90%' },
+    cardTitle: { left: '0%', width: '100%', textAlign: 'center', fontSize: '4cqw', color: '#fff4dc', fontClassName: 'font-sans' },
+    cardBody:  { left: '0%', width: '100%', textAlign: 'center', fontSize: '3.7cqw', color: '#fff4dc', fontClassName: 'font-sans' },
+    qr: { maxWidth: '28%', labelFontSize: '2.35cqw', textAlign: 'center', labelColor: '#5f4a56', labelBg: 'rgba(255,255,255,1)', fontClassName: 'font-sans' },
+  }
+  const sixthSectionInnerSize = { width: '100%', height: '100%', scaleX: 1.1, scaleY: 1.0 }
+  const sixthSectionOverlayScale = 0.9
   const fifthSectionTextShadow = '0 0 10px rgba(255,215,0,0.7), 0 0 22px rgba(255,165,0,0.35), 0 2px 6px rgba(0,0,0,0.6)'
   const WEDDING_SPARKLES = [
     { left: '7%',  top: '8%',  size: 13, delay: 0.0,  duration: 1.8 },
@@ -635,7 +667,11 @@ export default function EventSchedule() {
 
   return (
     <section className="relative" aria-label="Chronological wedding events">
-      {eventsData.slice(0, 6).map((event, index) => {
+      {eventsData.slice(0, 7).map((event, index) => {
+        if (event.id === 0 || event.id === 1) {
+          return null
+        }
+
         const mapDestination = event.mapUrl
         const qrData = encodeURIComponent(mapDestination)
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${qrData}`
@@ -647,6 +683,7 @@ export default function EventSchedule() {
         const isSecondSection = index === 3
         const isFourthSection = index === 4
         const isFifthSection  = index === 5
+        const isSixthSection  = index === 6
         const sectionStyle = isZeroSection
           ? { backgroundImage: `url(${pgBg})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }
           : isThirdSection
@@ -659,6 +696,8 @@ export default function EventSchedule() {
           ? { backgroundColor: '#1a1a2e' }
           : isFifthSection
           ? { backgroundColor: '#1a0a0a' }
+          : isSixthSection
+          ? { backgroundColor: '#2f1b10' }
           : {}
 
         return (
@@ -666,8 +705,8 @@ export default function EventSchedule() {
             key={event.id}
             id={`event-${event.id}`}
             data-event-section
-            ref={isZeroSection ? zeroSectionRef : isThirdSection ? thirdSectionRef : isFirstSection ? firstSectionRef : isSecondSection ? secondSectionRef : isFourthSection ? fourthSectionRef : isFifthSection ? fifthSectionRef : null}
-            className={`relative overflow-hidden border-y border-black/20 ${isZeroSection || isThirdSection || isFirstSection || isSecondSection || isFourthSection || isFifthSection ? 'px-0 py-0' : 'min-h-[80vh] py-12 sm:py-16 px-4 section-transition-top'}`}
+            ref={isZeroSection ? zeroSectionRef : isThirdSection ? thirdSectionRef : isFirstSection ? firstSectionRef : isSecondSection ? secondSectionRef : isFourthSection ? fourthSectionRef : isFifthSection ? fifthSectionRef : isSixthSection ? sixthSectionRef : null}
+            className={`relative overflow-hidden border-y border-black/20 ${isZeroSection || isThirdSection || isFirstSection || isSecondSection || isFourthSection || isFifthSection || isSixthSection ? 'px-0 py-0' : 'min-h-[80vh] py-12 sm:py-16 px-4 section-transition-top'}`}
             style={sectionStyle}
           >
             {isZeroSection ? (
@@ -722,7 +761,7 @@ export default function EventSchedule() {
                   className="absolute bottom-0 left-0 w-full z-[2]"
                   style={{
                     height: 'clamp(44px, 11vw, 110px)',
-                    backgroundColor: '#000000',
+                    backgroundColor: '#431818',
                     backgroundImage: `url(${pgBorder})`,
                     backgroundRepeat: 'repeat-x',
                     backgroundSize: 'auto 100%',
@@ -1502,6 +1541,136 @@ export default function EventSchedule() {
                                     <img src={qrUrl} alt={`QR code for ${event.venue}`} className="w-full bg-white p-[2%] shadow-md" loading="lazy" />
                                   </div>
                                   <div className={`${fifthSectionContent.qr.fontClassName} mt-[2%] rounded-xl px-[3%] py-[2%] font-semibold transition group-hover:bg-white/90 whitespace-nowrap w-max max-w-none`} style={{ backgroundColor: fifthSectionContent.qr.labelBg, textAlign: fifthSectionContent.qr.textAlign, fontSize: fifthSectionContent.qr.labelFontSize, lineHeight: 1.2, color: fifthSectionContent.qr.labelColor, textShadow: fifthSectionTextShadow }}>
+                                    Tap/Scan QR to Open Venue Map
+                                  </div>
+                                </a>
+                              </motion.div>
+                            </motion.div>
+                          </div>
+                        </div>
+                      </article>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : isSixthSection ? (
+              <>
+                <div
+                  className="absolute inset-0 z-0 pointer-events-none"
+                  style={{ backgroundImage: `url(${rcBg})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}
+                />
+                <motion.div
+                  className="absolute inset-0 z-50 pointer-events-none bg-black"
+                  style={{ opacity: darkOverlayOpacity6 }}
+                />
+                <div className="relative z-[1] mx-auto flex w-full justify-center" style={{ minHeight: 'max-content' }}>
+                  <div className="relative" style={{ width: firstSectionOverlayWidth, aspectRatio: '852 / 1261' }}>
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none z-[2]">
+                      {[
+                        { left: '8%', top: '12%', size: '4%', delay: 0.0, duration: 3.4 },
+                        { left: '16%', top: '22%', size: '3.2%', delay: 0.7, duration: 3.9 },
+                        { left: '24%', top: '16%', size: '3.6%', delay: 1.2, duration: 3.1 },
+                        { left: '32%', top: '30%', size: '3.2%', delay: 1.6, duration: 3.6 },
+                        { left: '40%', top: '18%', size: '3.8%', delay: 0.5, duration: 3.2 },
+                        { left: '48%', top: '12%', size: '3.4%', delay: 0.8, duration: 3.4 },
+                        { left: '56%', top: '28%', size: '3.6%', delay: 1.3, duration: 3.8 },
+                        { left: '64%', top: '18%', size: '3.2%', delay: 1.9, duration: 3.5 },
+                        { left: '72%', top: '30%', size: '3.4%', delay: 0.4, duration: 3.3 },
+                        { left: '80%', top: '16%', size: '2.8%', delay: 2.1, duration: 3.2 },
+                        { left: '14%', top: '40%', size: '3.4%', delay: 1.4, duration: 4.0 },
+                        { left: '22%', top: '56%', size: '3%', delay: 0.2, duration: 3.7 },
+                        { left: '34%', top: '44%', size: '3.2%', delay: 1.0, duration: 3.6 },
+                        { left: '50%', top: '44%', size: '3.6%', delay: 0.6, duration: 3.7 },
+                        { left: '60%', top: '56%', size: '3.2%', delay: 1.8, duration: 3.4 },
+                        { left: '74%', top: '44%', size: '2.9%', delay: 2.3, duration: 3.5 },
+                        { left: '84%', top: '42%', size: '3%', delay: 0.9, duration: 3.8 },
+                        { left: '10%', top: '72%', size: '3.4%', delay: 0.3, duration: 3.6 },
+                        { left: '20%', top: '82%', size: '3.2%', delay: 1.1, duration: 3.9 },
+                        { left: '30%', top: '74%', size: '3.6%', delay: 1.7, duration: 3.4 },
+                        { left: '44%', top: '84%', size: '3.4%', delay: 0.8, duration: 3.6 },
+                        { left: '58%', top: '74%', size: '3.2%', delay: 1.5, duration: 3.5 },
+                        { left: '70%', top: '84%', size: '3.4%', delay: 2.0, duration: 3.7 },
+                        { left: '82%', top: '74%', size: '3%', delay: 0.6, duration: 3.3 },
+                      ].map((sparkle, index) => (
+                        <motion.div
+                          key={index}
+                          className="absolute rounded-full"
+                          style={{
+                            left: sparkle.left,
+                            top: sparkle.top,
+                            width: sparkle.size,
+                            height: sparkle.size,
+                            background: 'radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,190,215,0.45) 35%, rgba(255,120,180,0.12) 70%, transparent 100%)',
+                            filter: 'blur(0.2px)',
+                            boxShadow: '0 0 6px rgba(255,180,215,0.35)',
+                          }}
+                          animate={{
+                            opacity: [0.12, 0.7, 0.12],
+                            scale: [0.55, 0.95, 0.55],
+                            y: [0, -4, 0],
+                            rotate: [0, 135, 270],
+                          }}
+                          transition={{ duration: sparkle.duration, repeat: Infinity, delay: sparkle.delay, ease: 'easeInOut' }}
+                        />
+                      ))}
+                    </div>
+                    <img
+                      src={rcInner}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute object-fill"
+                      // style={{ top: '50%', left: '50%', transform: `translate(-50%, -50%) scale(${sixthSectionOverlayScale})`, transformOrigin: 'center center', width: '100%', height: '100%' }}
+                      style={{ top: '50%', left: '50%', transform: `translate(-50%, -50%) scaleX(${sixthSectionInnerSize.scaleX}) scaleY(${sixthSectionInnerSize.scaleY})`, transformOrigin: 'center center', width: sixthSectionInnerSize.width, height: sixthSectionInnerSize.height }}
+
+                    />
+                    <img
+                      src={rcItop}
+                      alt=""
+                      aria-hidden="true"
+                      className="pointer-events-none absolute object-contain"
+                      style={{ top: '15%', left: '22%', width: '50%' }}
+                    />
+                    <div
+                      className="absolute z-20 overflow-hidden"
+                      style={{ containerType: 'inline-size', left: sixthSectionContent.wrapper.left, top: sixthSectionContent.wrapper.top, right: sixthSectionContent.wrapper.right, bottom: sixthSectionContent.wrapper.bottom }}
+                    >
+                      <article className="h-full w-full text-center">
+                        <div className="relative h-full w-full">
+                          <div className="absolute z-30 px-[4%]" style={{ top: sixthSectionContent.title.top, left: sixthSectionContent.title.left, width: sixthSectionContent.title.width, textAlign: sixthSectionContent.title.textAlign }}>
+                            <motion.h3
+                              className={`${sixthSectionContent.title.fontClassName} leading-[1.05]`}
+                              style={{ fontSize: sixthSectionContent.title.fontSize, color: sixthSectionContent.title.color, textShadow: firstSectionTextShadow, opacity: titleOpacity6, scale: titleScale6 }}
+                            >
+                              {event.title}
+                            </motion.h3>
+                          </div>
+                          <motion.div style={{ opacity: subtitleOpacity6, y: subtitleY6, filter: subtitleFilter6 }}>
+                            <p className={`${sixthSectionContent.subtitle.fontClassName} font-bold`} style={{ marginTop: sixthSectionContent.subtitle.marginTop, marginLeft: sixthSectionContent.subtitle.left, width: sixthSectionContent.subtitle.width, textAlign: sixthSectionContent.subtitle.textAlign, fontSize: sixthSectionContent.subtitle.fontSize, color: sixthSectionContent.subtitle.color, textShadow: firstSectionTextShadow }}>
+                              {event.subtitle}
+                            </p>
+                          </motion.div>
+                          <motion.div style={{ opacity: venueOpacity6, x: venueX6 }}>
+                            <div className={sixthSectionContent.venue.fontClassName} style={{ marginTop: sixthSectionContent.venue.marginTop, marginLeft: sixthSectionContent.venue.left, width: sixthSectionContent.venue.width, textAlign: sixthSectionContent.venue.textAlign, fontSize: sixthSectionContent.venue.fontSize, color: sixthSectionContent.venue.color, textShadow: firstSectionTextShadow }}>
+                              <p className="font-semibold" style={{ color: sixthSectionContent.venue.labelColor, textShadow: firstSectionTextShadow }}>Venue: {event.venue}</p>
+                              <p className="leading-snug text-[2.7cqw]" >{event.address}</p>
+                            </div>
+                          </motion.div>
+                          <div className="mb-[2%]" style={{ marginTop: sixthSectionContent.cards.marginTop }}>
+                            <motion.div style={{ opacity: dateOpacity6, x: dateX6 }}>
+                              <motion.div className={`${layout.cardClass} px-[3.2%] py-[2.7%]`} style={{ backgroundColor: layout.cardBg, width: sixthSectionContent.cards.width, marginInline: 'auto' }} whileHover={{ scale: 1.01 }}>
+                                <p className={`${sixthSectionContent.cardTitle.fontClassName} font-semibold`} style={{ width: sixthSectionContent.cardTitle.width, textAlign: sixthSectionContent.cardTitle.textAlign, fontSize: sixthSectionContent.cardTitle.fontSize, color: sixthSectionContent.cardTitle.color, textShadow: firstSectionTextShadow }}>Date &amp; Time</p>
+                                <p className={sixthSectionContent.cardBody.fontClassName} style={{ width: sixthSectionContent.cardBody.width, textAlign: sixthSectionContent.cardBody.textAlign, fontSize: sixthSectionContent.cardBody.fontSize, color: sixthSectionContent.cardBody.color, textShadow: firstSectionTextShadow }}>{event.date}</p>
+                                <p className={sixthSectionContent.cardBody.fontClassName} style={{ width: sixthSectionContent.cardBody.width, textAlign: sixthSectionContent.cardBody.textAlign, fontSize: sixthSectionContent.cardBody.fontSize, color: sixthSectionContent.cardBody.color, textShadow: firstSectionTextShadow }}>{event.time}</p>
+                              </motion.div>
+                            </motion.div>
+                            <motion.div style={{ opacity: qrOpacity6, scale: qrScale6 }}>
+                              <motion.div className={`${layout.cardClass} px-[3.2%] py-[2.7%]`} style={{ backgroundColor: layout.cardBg, marginTop: sixthSectionContent.cards.gap, width: sixthSectionContent.cards.width, marginInline: 'auto' }} whileHover={{ scale: 1.01 }}>
+                                <p className={`${sixthSectionContent.cardTitle.fontClassName} font-semibold`} style={{ width: sixthSectionContent.cardTitle.width, textAlign: sixthSectionContent.cardTitle.textAlign, fontSize: sixthSectionContent.cardTitle.fontSize, color: sixthSectionContent.cardTitle.color, textShadow: firstSectionTextShadow }}>Venue QR</p>
+                                <a href={mapLink} target="_blank" rel="noreferrer" className="group flex flex-col items-center mx-auto" aria-label={`Open maps for ${event.title}`}>
+                                  <div className="overflow-hidden" style={{ maxWidth: sixthSectionContent.qr.maxWidth }}>
+                                    <img src={qrUrl} alt={`QR code for ${event.venue}`} className="w-full bg-white p-[2%] shadow-md" loading="lazy" />
+                                  </div>
+                                  <div className={`${sixthSectionContent.qr.fontClassName} mt-[2%] rounded-xl px-[3%] py-[2%] font-semibold transition group-hover:bg-white/90 whitespace-nowrap w-max max-w-none`} style={{ backgroundColor: sixthSectionContent.qr.labelBg, textAlign: sixthSectionContent.qr.textAlign, fontSize: sixthSectionContent.qr.labelFontSize, lineHeight: 1.2, color: sixthSectionContent.qr.labelColor, textShadow: firstSectionTextShadow }}>
                                     Tap/Scan QR to Open Venue Map
                                   </div>
                                 </a>

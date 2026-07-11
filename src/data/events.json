@@ -150,5 +150,29 @@
     "storyFrames": ["Varmala exchange", "Seven sacred pheras", "Blessings crown the morning"],
     "designNote": "Banarasi textures, temple bells, and deep vermilion floral compositions.",
     "highlights": ["Varmala exchange", "Seven sacred pheras", "Family blessings"]
+  },
+  {
+    "id": 6,
+    "title": "Reception",
+    "subtitle": "Celebrating the beginning of forever!",
+    "date": "29th August 2026",
+    "time": "07:00 PM onwards",
+    "phase": "Day 3",
+    "venue": "R Convention",
+    "address": "Beside Sakshi office , Bengalore highway, Anantapur",
+    "mapUrl": "https://maps.app.goo.gl/MUQmQ5uHdYkMPbqcA?g_st=ic",
+    "dressCode": "",
+    "color": "pop-gold",
+    "theme": {
+      "bg": "from-[#fff8e1] via-[#fce4b3] to-[#f1c96a]",
+      "panel": "#fff3d0",
+      "accent": "#b8860b",
+      "ink": "#4b2e0f"
+    },
+    "motif": "sunburst",
+    "story": "The celebration continues into the evening with a festive reception, glowing lights, and cherished moments with loved ones.",
+    "storyFrames": ["Grand welcome", "Dinner and music", "Memories glow on"],
+    "designNote": "Golden lights, warm florals, and a glamorous evening ambiance.",
+    "highlights": ["Grand welcome", "Live music", "Dinner celebration"]
   }
 ]

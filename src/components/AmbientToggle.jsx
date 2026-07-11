@@ -1,58 +1,52 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
 export default function AmbientToggle() {
-  const [isOn, setIsOn] = useState(false)
-  const ctxRef = useRef(null)
-  const gainRef = useRef(null)
-  const oscARef = useRef(null)
-  const oscBRef = useRef(null)
+  const [isOn, setIsOn] = useState(true)
+  const audioRef = useRef(null)
 
-  const startAmbient = async () => {
-    if (!ctxRef.current) {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext
-      const ctx = new AudioCtx()
-      const gain = ctx.createGain()
-      gain.gain.value = 0.03
-      gain.connect(ctx.destination)
-
-      const oscA = ctx.createOscillator()
-      const oscB = ctx.createOscillator()
-      oscA.type = 'sine'
-      oscB.type = 'triangle'
-      oscA.frequency.value = 196
-      oscB.frequency.value = 293.66
-
-      oscA.connect(gain)
-      oscB.connect(gain)
-      oscA.start()
-      oscB.start()
-
-      ctxRef.current = ctx
-      gainRef.current = gain
-      oscARef.current = oscA
-      oscBRef.current = oscB
+  useEffect(() => {
+    // Initialize and play audio on page load
+    if (!audioRef.current) {
+      audioRef.current = new Audio('/Meghaallo.mp3')
+      audioRef.current.loop = true
+      audioRef.current.volume = 0.3
+      audioRef.current.preload = 'auto'
     }
 
-    if (ctxRef.current.state === 'suspended') {
-      await ctxRef.current.resume()
+    // Try to play audio
+    const playAudio = async () => {
+      try {
+        await audioRef.current.play()
+      } catch (err) {
+        console.log('Audio autoplay blocked by browser policy. Click to enable.')
+        // Setup click listener as fallback for browser autoplay restrictions
+        const enableAudio = async () => {
+          try {
+            await audioRef.current.play()
+            document.removeEventListener('click', enableAudio)
+          } catch (e) {
+            console.log('Error playing audio:', e)
+          }
+        }
+        document.addEventListener('click', enableAudio)
+      }
     }
 
-    setIsOn(true)
-  }
-
-  const stopAmbient = () => {
-    if (ctxRef.current && ctxRef.current.state === 'running') {
-      ctxRef.current.suspend()
-    }
-    setIsOn(false)
-  }
+    playAudio()
+  }, [])
 
   const toggle = () => {
     if (isOn) {
-      stopAmbient()
+      if (audioRef.current) {
+        audioRef.current.pause()
+      }
+      setIsOn(false)
     } else {
-      startAmbient()
+      if (audioRef.current) {
+        audioRef.current.play()
+      }
+      setIsOn(true)
     }
   }
 
